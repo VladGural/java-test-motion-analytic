@@ -1,6 +1,5 @@
 package pro.gural.analytic;
 
-import org.apache.kafka.common.protocol.types.Field;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,6 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.UnknownUnits;
 import pro.gural.analytic.component_test.BaseComponentTestWebWithPostgres;
 import pro.gural.analytic.produser.KafkaProduser;
 import pro.gural.common.domain.*;
@@ -22,6 +20,7 @@ import java.util.UUID;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static pro.gural.analytic.company.CompanyClient.*;
 
 /**
  * @author Vladyslav Gural
@@ -83,7 +82,9 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
         KafkaProduser.sendCompanyEvent(alis, KafkaActionType.CREATE);
 
         Awaitility.await().atMost(10, SECONDS).pollInterval(500, MILLISECONDS)
-                .until(() -> false);
+                .until(() -> isCurrentNameCorrect(getCompanyCurrentName(this, alisId), "Alis"));
+
+        checkCurrentName(getCompanyCurrentName(this, alisId), "Alis");
 
         logger.info("Component test finished");
     }

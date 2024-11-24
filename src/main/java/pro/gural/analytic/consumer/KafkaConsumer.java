@@ -1,16 +1,13 @@
 package pro.gural.analytic.consumer;
 
-import io.swagger.v3.oas.annotations.servers.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
+import pro.gural.analytic.domain.CompanyServiceAware;
 import pro.gural.common.domain.CompanyKafkaMessage;
 import util.Util;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Vladyslav Gural
@@ -23,6 +20,12 @@ class KafkaConsumer {
 
     private static final String COMPANY_TOPIC = "company.event.v1";
 
+    private final CompanyServiceAware companyService;
+
+    KafkaConsumer(CompanyServiceAware companyService) {
+        this.companyService = companyService;
+    }
+
     @KafkaListener(topics = COMPANY_TOPIC)
     void receiveEmail(@Payload String message) {
         CompanyKafkaMessage companyKafkaMessage = Util.fromJson(message, CompanyKafkaMessage.class);
@@ -31,7 +34,6 @@ class KafkaConsumer {
             return;
         }
         logger.info("Receive kafka message: {}", companyKafkaMessage);
-        // TODO prossesing
-
+        companyService.saveCompanyEvent(companyKafkaMessage);
     }
 }
