@@ -6,7 +6,7 @@ db:
   database: analytic_db
 
 kafka:
-  servers: kafka:9092
+  servers: localhost:9092
   group-id: ${spring.application.name}
 
 server:

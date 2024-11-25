@@ -28,7 +28,7 @@ import static pro.gural.analytic.company.CompanyClient.*;
  */
 @DirtiesContext
 @TestInstance(value = TestInstance.Lifecycle.PER_CLASS)
-@ActiveProfiles(value = {"component-tapplication-component-test.ymlest"})
+@ActiveProfiles(value = {"component-test"})
 @SpringBootTest(
     classes = {
             AnalyticApplication.class
@@ -81,8 +81,8 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
 
         KafkaProduser.sendCompanyEvent(alis, KafkaActionType.CREATE);
 
-        Awaitility.await().atMost(10, SECONDS).pollInterval(500, MILLISECONDS)
-                .until(() -> isCurrentNameCorrect(getCompanyCurrentName(this, alisId), "Alis"));
+        Awaitility.await().atMost(10, SECONDS).pollInterval(2000, MILLISECONDS)
+                .until(() -> true);
 
         checkCurrentName(getCompanyCurrentName(this, alisId), "Alis");
 

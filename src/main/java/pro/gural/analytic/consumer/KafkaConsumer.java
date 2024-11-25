@@ -27,7 +27,7 @@ class KafkaConsumer {
     }
 
     @KafkaListener(topics = COMPANY_TOPIC)
-    void receiveEmail(@Payload String message) {
+    public void receiveCompanyEvent(@Payload String message) {
         CompanyKafkaMessage companyKafkaMessage = Util.fromJson(message, CompanyKafkaMessage.class);
         if (companyKafkaMessage == null) {
             logger.error("Cannot parse message: {}", message);
