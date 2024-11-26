@@ -3,4 +3,4 @@ spring:
     show-sql: true
 
 kafka:
-  servers: localhost:3333
+  servers: PLAINTEXT://localhost:3333

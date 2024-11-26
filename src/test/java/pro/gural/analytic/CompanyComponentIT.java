@@ -11,6 +11,8 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import pro.gural.analytic.company.CompanyClient;
+import pro.gural.analytic.component_test.BaseComponentTestWebWithKafka;
 import pro.gural.analytic.component_test.BaseComponentTestWebWithPostgres;
 import pro.gural.analytic.producer.KafkaProducer;
 import pro.gural.common.domain.*;
@@ -37,10 +39,10 @@ import static pro.gural.analytic.company.CompanyClient.*;
 )
 @ContextConfiguration(
     initializers = {
-            BaseComponentTestWebWithPostgres.PostgresInitializer.class
+            BaseComponentTestWebWithPostgres.PostgresInitializer.class,
+            BaseComponentTestWebWithKafka.KafkaInitializer.class
     }
 )
-@EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:3333", "port=3333"})
 public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
     private static final Logger logger = LoggerFactory.getLogger(CompanyComponentIT.class);
 
@@ -82,7 +84,7 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
         KafkaProducer.sendCompanyEvent(alis, KafkaActionType.CREATE);
 
         Awaitility.await().atMost(10, SECONDS).pollInterval(2000, MILLISECONDS)
-                .until(() -> true);
+                .until(() -> isCurrentNameCorrect(getCompanyCurrentName(this, alisId), alis.getName()));
 
         checkCurrentName(getCompanyCurrentName(this, alisId), "Alis");
 
