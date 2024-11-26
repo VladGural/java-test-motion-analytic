@@ -12,7 +12,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import pro.gural.analytic.component_test.BaseComponentTestWebWithPostgres;
-import pro.gural.analytic.produser.KafkaProduser;
+import pro.gural.analytic.producer.KafkaProducer;
 import pro.gural.common.domain.*;
 
 import java.util.List;
@@ -79,7 +79,7 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
                 .setIndustry("food")
                 .setCompanyAddress(List.of(companyAddress01, companyAddress02));
 
-        KafkaProduser.sendCompanyEvent(alis, KafkaActionType.CREATE);
+        KafkaProducer.sendCompanyEvent(alis, KafkaActionType.CREATE);
 
         Awaitility.await().atMost(10, SECONDS).pollInterval(2000, MILLISECONDS)
                 .until(() -> true);

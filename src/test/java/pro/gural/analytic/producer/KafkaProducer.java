@@ -1,4 +1,4 @@
-package pro.gural.analytic.produser;
+package pro.gural.analytic.producer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import pro.gural.common.domain.Company;
 import pro.gural.common.domain.CompanyKafkaMessage;
 import pro.gural.common.domain.KafkaActionType;
+import pro.gural.common.domain.KafkaTopics;
 import util.Util;
 
 import java.time.Instant;
@@ -20,16 +21,15 @@ import java.util.concurrent.CompletableFuture;
  * @version 2024-11-24
  */
 @Component
-public class KafkaProduser {
-    private static final Logger logger = LoggerFactory.getLogger(KafkaProduser.class);
+public class KafkaProducer {
+    private static final Logger logger = LoggerFactory.getLogger(KafkaProducer.class);
 
-    private static final String COMPANY_TOPIC = "company.event.v1";
     private static final String DEFAULT_TEMPLATE = "default";
 
 
     private static Map<String, KafkaTemplate<String, String>> kafkaTemplateMap = new HashMap<>();
 
-    public KafkaProduser(KafkaTemplate<String, String> defaultTemplate) {
+    public KafkaProducer(KafkaTemplate<String, String> defaultTemplate) {
         kafkaTemplateMap.put(DEFAULT_TEMPLATE, defaultTemplate);
     }
 
@@ -39,7 +39,7 @@ public class KafkaProduser {
                 .setCompany(company)
                 .setEventTime(Instant.now());
         CompletableFuture<SendResult<String, String>> future =
-                getTemplate().send(COMPANY_TOPIC, company.getId(), Util.toJson(companyKafkaMessage));
+                getTemplate().send(KafkaTopics.COMPANY_TOPIC, company.getId(), Util.toJson(companyKafkaMessage));
         future.whenComplete((result, ex) -> {
             if (ex == null) {
                 logger.info("Kafka company message: {} was sent.",companyKafkaMessage);
