@@ -65,6 +65,16 @@ class CompanyResource {
         return addressCategoryStat;
     }
 
-
+    @Operation(summary = "Get company current status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved company current status"),
+    })
+    @GetMapping("/{companyId}/current-statuses")
+    CompanyCurrentStatus getCompanyCurrentStatus(@PathVariable String companyId) {
+        logger.info("User try to get company with id: {} current status", companyId);
+        CompanyCurrentStatus companyCurrentStatus = service.getCompanyCurrentStatus(companyId);
+        logger.info("Company current status was successfully received: {}", companyCurrentStatus);
+        return companyCurrentStatus;
+    }
 
 }

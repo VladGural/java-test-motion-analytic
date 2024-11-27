@@ -54,4 +54,10 @@ class CompanyService implements CompanyServiceAware {
         List<String> currentCategories = repo.getCurrentCategories(companyId);
         return toAddressCategoryStat(currentCategories);
     }
+
+    public CompanyCurrentStatus getCompanyCurrentStatus(String companyId) {
+        String companyCurrentStatus = repo.getCompanyCurrentStatus(companyId);
+        return new CompanyCurrentStatus()
+                .setCurrentStatus(companyCurrentStatus);
+    }
 }

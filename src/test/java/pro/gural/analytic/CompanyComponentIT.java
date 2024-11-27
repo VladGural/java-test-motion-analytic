@@ -102,6 +102,9 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
         checkCategoryStat(getCompanyAddressCategoryStat(this, alisId),
                 Map.of("HEADQUARTER", 2, "DISTRIBUTION_CENTER", 1));
 
+        // check getCurrentStatus endpoint
+        checkCurrentStatus(getCompanyCurrentStatus(this, alisId), "ACTIVE");
+
         //
         // first update company1
         // update company name, contactInformation and company addresses
@@ -154,6 +157,9 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
         checkCategoryStat(getCompanyAddressCategoryStat(this, alisId),
                 Map.of("HEADQUARTER", 1, "DISTRIBUTION_CENTER", 1, "BRANCH_OFFICE", 1, "WAREHOUSE", 3));
 
+        // check getCurrentStatus endpoint
+        checkCurrentStatus(getCompanyCurrentStatus(this, alisId), "ACTIVE");
+
         //
         // second update company1
         // update company name and company status
@@ -178,6 +184,9 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
         // check addressCategoryStat endpoint
         checkCategoryStat(getCompanyAddressCategoryStat(this, alisId),
                 Map.of("HEADQUARTER", 1, "DISTRIBUTION_CENTER", 1, "BRANCH_OFFICE", 1, "WAREHOUSE", 3));
+
+        // check getCurrentStatus endpoint
+        checkCurrentStatus(getCompanyCurrentStatus(this, alisId), "BLOCKED");
 
         logger.info("Component test finished");
     }

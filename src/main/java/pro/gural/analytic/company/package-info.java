@@ -249,3 +249,23 @@ class AddressCategoryStat {
                 '}';
     }
 }
+
+class CompanyCurrentStatus {
+    private String currentStatus;
+
+    public String getCurrentStatus() {
+        return currentStatus;
+    }
+
+    public CompanyCurrentStatus setCurrentStatus(String currentStatus) {
+        this.currentStatus = currentStatus;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "CompanyCurrentStatus{" +
+                "currentStatus='" + currentStatus + '\'' +
+                '}';
+    }
+}

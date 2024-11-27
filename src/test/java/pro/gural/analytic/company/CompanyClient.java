@@ -34,6 +34,12 @@ public class CompanyClient {
         return Util.fromJson(get, AddressCategoryStat.class);
     }
 
+    public static CompanyCurrentStatus getCompanyCurrentStatus(BaseComponentTest restCall, String companyId) throws Exception {
+        String url = "/v1/companies/" + companyId +"/current-statuses";
+        String get = restCall.get(url);
+        return Util.fromJson(get, CompanyCurrentStatus.class);
+    }
+
     public static boolean isCurrentNameCorrect(CompanyCurrentName companyCurrentName, String checkCurrentName) {
         return checkCurrentName.equals(companyCurrentName.getCurrentName());
     }
@@ -59,6 +65,10 @@ public class CompanyClient {
         return addresses.stream()
                 .filter(a -> city.equals(a.getCity()))
                 .findFirst().orElse(null);
+    }
+
+    public static void checkCurrentStatus(CompanyCurrentStatus companyCurrentName, String checkCurrentStatus) {
+        assertThat(checkCurrentStatus.equals(companyCurrentName.getCurrentStatus()), is(true));
     }
 
 

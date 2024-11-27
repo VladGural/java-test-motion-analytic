@@ -39,4 +39,13 @@ interface CompanyRepository extends JpaRepository<CompanyEntity, String> {
         WHERE ca.company_id = :companyId
     """, nativeQuery = true)
     List<String> getCurrentCategories(@Param("companyId") String companyId);
+
+    @Query(value = """
+        SELECT status
+        FROM company
+        WHERE id = :companyId
+        ORDER BY event_time DESC
+        LIMIT 1
+    """, nativeQuery = true)
+    String getCompanyCurrentStatus(@Param("companyId") String companyId);
 }
