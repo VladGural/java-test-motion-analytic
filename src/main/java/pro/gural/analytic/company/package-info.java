@@ -5,6 +5,7 @@
 package pro.gural.analytic.company;
 
 import jakarta.persistence.*;
+import org.apache.kafka.common.protocol.types.Field;
 import pro.gural.common.domain.CompanyStatusType;
 import pro.gural.common.domain.KafkaActionType;
 
@@ -12,6 +13,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 class CompanyId implements Serializable {
@@ -224,6 +226,26 @@ class CompanyNames {
         return "CompanyNames{" +
                 "currentName='" + currentName + '\'' +
                 ", previousNames=" + previousNames +
+                '}';
+    }
+}
+
+class AddressCategoryStat {
+    private Map<String, Integer> addressCategoryStat;
+
+    public Map<String, Integer> getAddressCategoryStat() {
+        return addressCategoryStat;
+    }
+
+    public AddressCategoryStat setAddressCategoryStat(Map<String, Integer> addressCategoryStat) {
+        this.addressCategoryStat = addressCategoryStat;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "AddressCategoryStat{" +
+                "addressCategoryStat=" + addressCategoryStat +
                 '}';
     }
 }

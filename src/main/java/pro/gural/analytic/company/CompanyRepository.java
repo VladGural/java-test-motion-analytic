@@ -28,4 +28,15 @@ interface CompanyRepository extends JpaRepository<CompanyEntity, String> {
         ORDER BY event_time DESC
     """, nativeQuery = true)
     List<String> getCompanyNames(@Param("companyId") String companyId);
+
+    @Query(value = """
+        SELECT category
+        FROM company_address ca
+        INNER JOIN (SELECT MAX(event_time) as last_event_time
+                    FROM company
+                    WHERE id = :companyId
+                    GROUP BY id) last_event ON last_event.last_event_time = ca.event_time
+        WHERE ca.company_id = :companyId
+    """, nativeQuery = true)
+    List<String> getCurrentCategories(@Param("companyId") String companyId);
 }

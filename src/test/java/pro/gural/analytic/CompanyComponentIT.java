@@ -16,6 +16,7 @@ import pro.gural.analytic.producer.KafkaProducer;
 import pro.gural.common.domain.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -97,6 +98,10 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
         // check getNames endpoint
         checkNames(getCompanyNames(this, alisId), "Alis", List.of());
 
+        // check addressCategoryStat endpoint
+        checkCategoryStat(getCompanyAddressCategoryStat(this, alisId),
+                Map.of("HEADQUARTER", 2, "DISTRIBUTION_CENTER", 1));
+
         //
         // first update company1
         // update company name, contactInformation and company addresses
@@ -145,6 +150,10 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
         // check getNames endpoint
         checkNames(getCompanyNames(this, alisId), "Alis-1", List.of("Alis"));
 
+        // check addressCategoryStat endpoint
+        checkCategoryStat(getCompanyAddressCategoryStat(this, alisId),
+                Map.of("HEADQUARTER", 1, "DISTRIBUTION_CENTER", 1, "BRANCH_OFFICE", 1, "WAREHOUSE", 3));
+
         //
         // second update company1
         // update company name and company status
@@ -165,6 +174,10 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
 
         // check getNames endpoint
         checkNames(getCompanyNames(this, alisId), "Alis-2", List.of("Alis-1", "Alis"));
+
+        // check addressCategoryStat endpoint
+        checkCategoryStat(getCompanyAddressCategoryStat(this, alisId),
+                Map.of("HEADQUARTER", 1, "DISTRIBUTION_CENTER", 1, "BRANCH_OFFICE", 1, "WAREHOUSE", 3));
 
         logger.info("Component test finished");
     }

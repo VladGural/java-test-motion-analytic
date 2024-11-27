@@ -32,27 +32,37 @@ class CompanyResource {
     @Operation(summary = "Get company current name")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved company current name"),
-            @ApiResponse(responseCode = "404", description = "Company not found")
     })
     @GetMapping("/{companyId}/current-names")
     CompanyCurrentName getCompanyCurrentName(@PathVariable String companyId) {
-        logger.info("User try to get company current name: {}", companyId);
+        logger.info("User try to get company with id: {} current name", companyId);
         CompanyCurrentName companyCurrentName = service.getCompanyCurrentName(companyId);
         logger.info("Company current name was successfully received: {}", companyCurrentName);
         return companyCurrentName;
     }
 
-    @Operation(summary = "Get company current name")
+    @Operation(summary = "Get company names")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved company current name"),
-            @ApiResponse(responseCode = "404", description = "Company not found")
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved company names"),
     })
     @GetMapping("/{companyId}/names")
     CompanyNames getCompanyNames(@PathVariable String companyId) {
-        logger.info("User try to get company names: {}", companyId);
+        logger.info("User try to get company with id: {} names", companyId);
         CompanyNames companyNames = service.getCompanyNames(companyId);
         logger.info("Company names was successfully received: {}", companyNames);
         return companyNames;
+    }
+
+    @Operation(summary = "Get company address category stat")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved address category stat"),
+    })
+    @GetMapping("/{companyId}/address-category-stats")
+    AddressCategoryStat getAddressCategoryStat(@PathVariable String companyId) {
+        logger.info("User try to get company with id: {} address category stat", companyId);
+        AddressCategoryStat addressCategoryStat = service.getAddressCategoryStat(companyId);
+        logger.info("Company address category stat was successfully received: {}", addressCategoryStat);
+        return addressCategoryStat;
     }
 
 

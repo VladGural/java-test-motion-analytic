@@ -1,12 +1,12 @@
 package pro.gural.analytic.company;
 
+import org.springframework.web.servlet.tags.form.InputTag;
 import pro.gural.common.domain.Company;
 import pro.gural.common.domain.KafkaActionType;
+import util.Util;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Vladyslav Gural
@@ -36,5 +36,26 @@ class Converter {
         return new CompanyNames()
                 .setCurrentName(currentName)
                 .setPreviousNames(companyNames);
+    }
+
+    public static AddressCategoryStat toAddressCategoryStat(List<String> currentCategories) {
+        Map<String, Integer> addressCategoryStatMap = new HashMap<>();
+        if (currentCategories == null || currentCategories.isEmpty()) {
+            return new AddressCategoryStat()
+                    .setAddressCategoryStat(addressCategoryStatMap);
+        }
+        currentCategories.stream()
+                .map(Util::fromStringArrayJson)
+                .flatMap(Collection::stream)
+                .forEach(c -> {
+                    Integer currentCount = addressCategoryStatMap.get(c);
+                    if (currentCount == null) {
+                        addressCategoryStatMap.put(c, 1);
+                    } else {
+                        addressCategoryStatMap.put(c, ++currentCount);
+                    }
+                });
+        return new AddressCategoryStat()
+                .setAddressCategoryStat(addressCategoryStatMap);
     }
 }
