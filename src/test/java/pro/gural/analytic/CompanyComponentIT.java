@@ -23,6 +23,9 @@ import java.util.UUID;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static pro.gural.analytic.company.CompanyClient.*;
+import static pro.gural.common.domain.AddressCategoryType.*;
+import static pro.gural.common.domain.CompanyStatusType.ACTIVE;
+import static pro.gural.common.domain.CompanyStatusType.BLOCKED;
 
 /**
  * @author Vladyslav Gural
@@ -53,7 +56,9 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
     @Test
     void test() throws Exception {
 
-        // create Alis company
+        //
+        // create company1
+        //
         String alisId = UUID.randomUUID().toString();
         CompanyAddress companyAddress01 = new CompanyAddress()
                 .setId(UUID.randomUUID().toString())
@@ -73,7 +78,7 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
                 .setZip("02011")
                 .setAddressCategory(List.of(AddressCategoryType.HEADQUARTER));
 
-        Company alis = new Company()
+        Company company1 = new Company()
                 .setId(alisId)
                 .setName("Alis")
                 .setStatus(CompanyStatusType.ACTIVE)
@@ -81,12 +86,78 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
                 .setIndustry("food")
                 .setCompanyAddress(List.of(companyAddress01, companyAddress02));
 
-        KafkaProducer.sendCompanyEvent(alis, KafkaActionType.CREATE);
+        // send company1 Kafka event
+        CompanyKafkaMessage company1KafkaMessage = KafkaProducer.sendCompanyEvent(company1, KafkaActionType.CREATE);
 
-        Awaitility.await().atMost(10, SECONDS).pollInterval(2000, MILLISECONDS)
-                .until(() -> isCurrentNameCorrect(getCompanyCurrentName(this, alisId), alis.getName()));
+        // wait receiving company1 Kafka event
+        Awaitility.await().atMost(10, SECONDS).pollInterval(500, MILLISECONDS)
+                .until(() -> isCurrentNameCorrect(getCompanyCurrentName(this, alisId), "Alis"));
 
+        // check getCurrentName endpoint
         checkCurrentName(getCompanyCurrentName(this, alisId), "Alis");
+
+        //
+        // first update company1
+        // update company name, contactInformation and company addresses
+
+        // create 2 new company1 address update company1 address in Kyiv and delete company1 Address in Lviv
+        companyAddress01 = new CompanyAddress()
+                .setId(UUID.randomUUID().toString())
+                .setCompanyId(alisId)
+                .setCountry("Ukraine")
+                .setCity("Odesa")
+                .setStreet("Chernomorska")
+                .setZip("04223")
+                .setAddressCategory(List.of(WAREHOUSE));
+
+        companyAddress02 = new CompanyAddress()
+                .setId(UUID.randomUUID().toString())
+                .setCompanyId(alisId)
+                .setCountry("Ukraine")
+                .setCity("Dnipro")
+                .setStreet("Dniprovska")
+                .setZip("05332")
+                .setAddressCategory(List.of(BRANCH_OFFICE, WAREHOUSE));
+
+        CompanyAddress companyAddress03 = getAddressByCity(company1KafkaMessage.getCompany().getCompanyAddress(), "Kyiv");
+        companyAddress03
+                .setStreet("Petra Sagaydachnogo")
+                .setZip("03133")
+                .setAddressCategory(List.of(HEADQUARTER, DISTRIBUTION_CENTER, WAREHOUSE));
+
+        company1 = company1KafkaMessage.getCompany();
+        company1
+                .setName("Alis-1")
+                .setContactInformation("phone: +380503332211, +380508885533, mail: info@alis.pro")
+                .setCompanyAddress(List.of(companyAddress01, companyAddress02, companyAddress03));
+
+        // send company1 Kafka event
+        company1KafkaMessage = KafkaProducer.sendCompanyEvent(company1, KafkaActionType.UPDATE);
+
+        // wait receiving company1 Kafka event
+        Awaitility.await().atMost(10, SECONDS).pollInterval(500, MILLISECONDS)
+                .until(() -> isCurrentNameCorrect(getCompanyCurrentName(this, alisId), "Alis-1"));
+
+        // check getCurrentName endpoint
+        checkCurrentName(getCompanyCurrentName(this, alisId), "Alis-1");
+
+        //
+        // second update company1
+        // update company name and company status
+        company1 = company1KafkaMessage.getCompany();
+        company1
+                .setName("Alis-2")
+                .setStatus(BLOCKED);
+
+        // send company1 Kafka event
+        company1KafkaMessage = KafkaProducer.sendCompanyEvent(company1, KafkaActionType.UPDATE);
+
+        // wait receiving company1 Kafka event
+        Awaitility.await().atMost(10, SECONDS).pollInterval(500, MILLISECONDS)
+                .until(() -> isCurrentNameCorrect(getCompanyCurrentName(this, alisId), "Alis-2"));
+
+        // check getCurrentName endpoint
+        checkCurrentName(getCompanyCurrentName(this, alisId), "Alis-2");
 
         logger.info("Component test finished");
     }

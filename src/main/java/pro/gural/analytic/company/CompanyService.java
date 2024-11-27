@@ -33,7 +33,7 @@ class CompanyService implements CompanyServiceAware {
                 companyKafkaMessage.getAction(), companyKafkaMessage.getEventTime());
         repo.saveAndFlush(companyEntity);
         addressService.saveAddressEvents(companyKafkaMessage.getCompany().getCompanyAddress(),
-                companyKafkaMessage.getEventTime());
+                companyKafkaMessage.getEventTime(), companyEntity.getEventId());
         logger.info("Company event was saved");
     }
 

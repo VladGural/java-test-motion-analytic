@@ -26,8 +26,8 @@ class AddressService implements AddressServiceAware {
     }
 
     @Override
-    public void saveAddressEvents(List<CompanyAddress> companyAddressList, Instant eventTime) {
-        List<AddressEntity> addressEntityList = toAddressEntityList(companyAddressList, eventTime);
+    public void saveAddressEvents(List<CompanyAddress> companyAddressList, Instant eventTime, String eventId) {
+        List<AddressEntity> addressEntityList = toAddressEntityList(companyAddressList, eventTime, eventId);
         repo.saveAllAndFlush(addressEntityList);
     }
 }

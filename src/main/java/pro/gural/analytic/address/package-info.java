@@ -1,18 +1,56 @@
 /**
  * @author Vladyslav Gural
- * @version 2024-11-23
+ * @version 2024-11-27
  */
 package pro.gural.analytic.address;
 
 import jakarta.persistence.*;
-import pro.gural.common.domain.KafkaActionType;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
+class AddressId implements Serializable {
+
+    private String eventId;
+
+    private String id;
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public AddressId setEventId(String eventId) {
+        this.eventId = eventId;
+        return this;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public AddressId setId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "CompanyId{" +
+                "eventId='" + eventId + '\'' +
+                ", id='" + id + '\'' +
+                '}';
+    }
+}
+
 @Entity
+@IdClass(AddressId.class)
 @Table(name = "company_address")
 class AddressEntity {
+    @Id
+    @Column(name = "event_id")
+    private String eventId;
+
     @Id
     private String id;
 
@@ -32,6 +70,15 @@ class AddressEntity {
 
     @Column(name = "event_time")
     private Instant eventTime;
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public AddressEntity setEventId(String eventId) {
+        this.eventId = eventId;
+        return this;
+    }
 
     public String getId() {
         return id;
@@ -107,21 +154,21 @@ class AddressEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AddressEntity that = (AddressEntity) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(eventId, that.eventId) && Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(eventId, id);
     }
 
     @Override
     public String toString() {
         return "AddressEntity{" +
-                "id='" + id + '\'' +
+                "eventId='" + eventId + '\'' +
+                ", id='" + id + '\'' +
                 ", companyId='" + companyId + '\'' +
                 ", country='" + country + '\'' +
                 ", city='" + city + '\'' +

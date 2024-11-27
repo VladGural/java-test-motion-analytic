@@ -4,6 +4,7 @@ import pro.gural.common.domain.Company;
 import pro.gural.common.domain.KafkaActionType;
 
 import java.time.Instant;
+import java.util.UUID;
 
 /**
  * @author Vladyslav Gural
@@ -12,6 +13,7 @@ import java.time.Instant;
 class Converter {
     public static CompanyEntity toCompanyEntity(Company company, KafkaActionType actionType, Instant eventTime) {
         return new CompanyEntity()
+                .setEventId(UUID.randomUUID().toString())
                 .setId(company.getId())
                 .setName(company.getName())
                 .setStatus(company.getStatus())

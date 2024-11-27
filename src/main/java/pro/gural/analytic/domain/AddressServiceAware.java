@@ -1,5 +1,6 @@
 package pro.gural.analytic.domain;
 
+import org.apache.kafka.common.protocol.types.Field;
 import pro.gural.common.domain.CompanyAddress;
 
 import java.time.Instant;
@@ -11,5 +12,5 @@ import java.util.List;
  */
 public interface AddressServiceAware {
 
-    void saveAddressEvents(List<CompanyAddress> companyAddressList, Instant eventTime);
+    void saveAddressEvents(List<CompanyAddress> companyAddressList, Instant eventTime, String eventId);
 }

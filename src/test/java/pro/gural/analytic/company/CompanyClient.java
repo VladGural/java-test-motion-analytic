@@ -2,7 +2,10 @@ package pro.gural.analytic.company;
 
 import org.hamcrest.core.Is;
 import pro.gural.analytic.component_test.BaseComponentTest;
+import pro.gural.common.domain.CompanyAddress;
 import util.Util;
+
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -23,6 +26,12 @@ public class CompanyClient {
 
     public static void checkCurrentName(CompanyCurrentName companyCurrentName, String checkCurrentName) {
         assertThat(checkCurrentName.equals(companyCurrentName.getCurrentName()), Is.is(true));
+    }
+
+    public static CompanyAddress getAddressByCity(List<CompanyAddress> addresses, String city) {
+        return addresses.stream()
+                .filter(a -> city.equals(a.getCity()))
+                .findFirst().orElse(null);
     }
 
 

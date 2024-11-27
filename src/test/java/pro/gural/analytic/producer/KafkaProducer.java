@@ -33,7 +33,7 @@ public class KafkaProducer {
         kafkaTemplateMap.put(DEFAULT_TEMPLATE, defaultTemplate);
     }
 
-    public static void sendCompanyEvent(Company company, KafkaActionType action) {
+    public static CompanyKafkaMessage sendCompanyEvent(Company company, KafkaActionType action) {
         CompanyKafkaMessage companyKafkaMessage = new CompanyKafkaMessage()
                 .setAction(action)
                 .setCompany(company)
@@ -47,6 +47,7 @@ public class KafkaProducer {
                 logger.info("Unable to send kafka company message {}", companyKafkaMessage);
             }
         });
+        return companyKafkaMessage;
     }
 
     private static KafkaTemplate<String, String> getTemplate() {

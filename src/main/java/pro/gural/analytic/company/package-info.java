@@ -10,13 +10,53 @@ import pro.gural.common.domain.CompanyAddress;
 import pro.gural.common.domain.CompanyStatusType;
 import pro.gural.common.domain.KafkaActionType;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
+class CompanyId implements Serializable {
+
+    private String eventId;
+
+    private String id;
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public CompanyId setEventId(String eventId) {
+        this.eventId = eventId;
+        return this;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public CompanyId setId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "CompanyId{" +
+                "eventId='" + eventId + '\'' +
+                ", id='" + id + '\'' +
+                '}';
+    }
+}
+
+
 @Entity
+@IdClass(CompanyId.class)
 @Table(name = "company")
 class CompanyEntity {
+    @Id
+    @Column(name = "event_id")
+    private String eventId;
+
     @Id
     private String id;
 
@@ -36,6 +76,15 @@ class CompanyEntity {
 
     @Column(name = "event_time")
     private Instant eventTime;
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public CompanyEntity setEventId(String eventId) {
+        this.eventId = eventId;
+        return this;
+    }
 
     public String getId() {
         return id;
@@ -102,21 +151,21 @@ class CompanyEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CompanyEntity that = (CompanyEntity) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(eventId, that.eventId) && Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(eventId, id);
     }
 
     @Override
     public String toString() {
         return "CompanyEntity{" +
-                "id='" + id + '\'' +
+                "eventId='" + eventId + '\'' +
+                ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", status=" + status +
                 ", contactInformation='" + contactInformation + '\'' +
