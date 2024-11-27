@@ -5,13 +5,12 @@
 package pro.gural.analytic.company;
 
 import jakarta.persistence.*;
-import org.apache.kafka.common.protocol.types.Field;
-import pro.gural.common.domain.CompanyAddress;
 import pro.gural.common.domain.CompanyStatusType;
 import pro.gural.common.domain.KafkaActionType;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -192,6 +191,39 @@ class CompanyCurrentName {
     public String toString() {
         return "CompanyCurrentName{" +
                 "currentName='" + currentName + '\'' +
+                '}';
+    }
+}
+
+class CompanyNames {
+    private String currentName;
+
+    private List<String> previousNames = new ArrayList<>();
+
+
+    public String getCurrentName() {
+        return currentName;
+    }
+
+    public CompanyNames setCurrentName(String currentName) {
+        this.currentName = currentName;
+        return this;
+    }
+
+    public List<String> getPreviousNames() {
+        return previousNames;
+    }
+
+    public CompanyNames setPreviousNames(List<String> previousNames) {
+        this.previousNames = previousNames;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "CompanyNames{" +
+                "currentName='" + currentName + '\'' +
+                ", previousNames=" + previousNames +
                 '}';
     }
 }

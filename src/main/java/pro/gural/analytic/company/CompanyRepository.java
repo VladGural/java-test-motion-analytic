@@ -1,9 +1,10 @@
 package pro.gural.analytic.company;
 
-import jakarta.validation.constraints.Past;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 /**
  * @author Vladyslav Gural
@@ -19,4 +20,12 @@ interface CompanyRepository extends JpaRepository<CompanyEntity, String> {
         LIMIT 1
     """, nativeQuery = true)
     String getCompanyCurrentName(@Param("companyId") String companyId);
+
+    @Query(value = """
+        SELECT name
+        FROM company
+        WHERE id = :companyId
+        ORDER BY event_time DESC
+    """, nativeQuery = true)
+    List<String> getCompanyNames(@Param("companyId") String companyId);
 }

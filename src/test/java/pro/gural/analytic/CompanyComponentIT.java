@@ -7,11 +7,9 @@ import org.junit.jupiter.api.TestInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import pro.gural.analytic.company.CompanyClient;
 import pro.gural.analytic.component_test.BaseComponentTestWebWithKafka;
 import pro.gural.analytic.component_test.BaseComponentTestWebWithPostgres;
 import pro.gural.analytic.producer.KafkaProducer;
@@ -96,6 +94,9 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
         // check getCurrentName endpoint
         checkCurrentName(getCompanyCurrentName(this, alisId), "Alis");
 
+        // check getNames endpoint
+        checkNames(getCompanyNames(this, alisId), "Alis", List.of());
+
         //
         // first update company1
         // update company name, contactInformation and company addresses
@@ -141,6 +142,9 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
         // check getCurrentName endpoint
         checkCurrentName(getCompanyCurrentName(this, alisId), "Alis-1");
 
+        // check getNames endpoint
+        checkNames(getCompanyNames(this, alisId), "Alis-1", List.of("Alis"));
+
         //
         // second update company1
         // update company name and company status
@@ -158,6 +162,9 @@ public class CompanyComponentIT extends BaseComponentTestWebWithPostgres {
 
         // check getCurrentName endpoint
         checkCurrentName(getCompanyCurrentName(this, alisId), "Alis-2");
+
+        // check getNames endpoint
+        checkNames(getCompanyNames(this, alisId), "Alis-2", List.of("Alis-1", "Alis"));
 
         logger.info("Component test finished");
     }

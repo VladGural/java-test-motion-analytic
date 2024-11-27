@@ -8,7 +8,10 @@ import pro.gural.analytic.domain.AddressServiceAware;
 import pro.gural.analytic.domain.CompanyServiceAware;
 import pro.gural.common.domain.CompanyKafkaMessage;
 
+import java.util.List;
+
 import static pro.gural.analytic.company.Converter.toCompanyEntity;
+import static pro.gural.analytic.company.Converter.toCompanyNames;
 
 /**
  * @author Vladyslav Gural
@@ -41,5 +44,10 @@ class CompanyService implements CompanyServiceAware {
         String companyCurrentName = repo.getCompanyCurrentName(companyId);
         return new CompanyCurrentName()
                 .setCurrentName(companyCurrentName);
+    }
+
+    public CompanyNames getCompanyNames(String companyId) {
+        List<String> companyNames = repo.getCompanyNames(companyId);
+        return toCompanyNames(companyNames);
     }
 }

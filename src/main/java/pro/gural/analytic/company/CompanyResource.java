@@ -40,4 +40,21 @@ class CompanyResource {
         CompanyCurrentName companyCurrentName = service.getCompanyCurrentName(companyId);
         logger.info("Company current name was successfully received: {}", companyCurrentName);
         return companyCurrentName;
-    }}
+    }
+
+    @Operation(summary = "Get company current name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved company current name"),
+            @ApiResponse(responseCode = "404", description = "Company not found")
+    })
+    @GetMapping("/{companyId}/names")
+    CompanyNames getCompanyNames(@PathVariable String companyId) {
+        logger.info("User try to get company names: {}", companyId);
+        CompanyNames companyNames = service.getCompanyNames(companyId);
+        logger.info("Company names was successfully received: {}", companyNames);
+        return companyNames;
+    }
+
+
+
+}
